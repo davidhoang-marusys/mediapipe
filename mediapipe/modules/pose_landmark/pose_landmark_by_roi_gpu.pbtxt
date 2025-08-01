@@ -89,7 +89,7 @@ output_stream: "AUXILIARY_LANDMARKS:auxiliary_landmarks"
 # LANDMARKS. However, LANDMARKS provides coordinates (in pixels) of a 3D object
 # projected onto the 2D image surface, while WORLD_LANDMARKS provides
 # coordinates (in meters) of the 3D object itself.
-output_stream: "WORLD_LANDMARKS:world_landmarks"
+
 
 # Segmentation mask on GPU in RGBA with the same mask values in R and A. (Image)
 output_stream: "SEGMENTATION_MASK:segmentation_mask"
@@ -106,9 +106,16 @@ node {
 # while maintaining the aspect ratio of the ROI (which can be different from
 # that of the image patch). Therefore, there can be letterboxing around the ROI
 # in the generated tensor representation.
+
+node: {
+  calculator: "GpuBufferToImageFrameCalculator"
+  input_stream: "image"
+  output_stream: "input_video_cpu"
+}
+
 node: {
   calculator: "ImageToTensorCalculator"
-  input_stream: "IMAGE_GPU:image"
+  input_stream: "IMAGE:input_video_cpu"
   input_stream: "NORM_RECT:roi"
   output_stream: "TENSORS:input_tensors"
   output_stream: "LETTERBOX_PADDING:letterbox_padding"
@@ -122,7 +129,6 @@ node: {
         min: 0.0
         max: 1.0
       }
-      gpu_origin: TOP_LEFT
     }
   }
 }
@@ -140,6 +146,11 @@ node {
   input_side_packet: "MODEL:model"
   input_stream: "TENSORS:input_tensors"
   output_stream: "TENSORS:output_tensors"
+  options: {
+  [mediapipe.InferenceCalculatorOptions.ext] {
+    delegate { xnnpack {} }
+  }
+}
 }
 
 # Decodes the tensors into the corresponding landmark and segmentation mask
@@ -150,7 +161,6 @@ node {
   input_stream: "TENSORS:output_tensors"
   output_stream: "LANDMARKS:roi_landmarks"
   output_stream: "AUXILIARY_LANDMARKS:roi_auxiliary_landmarks"
-  output_stream: "WORLD_LANDMARKS:roi_world_landmarks"
   output_stream: "SEGMENTATION_MASK:roi_segmentation_mask"
 }
 
@@ -165,10 +175,8 @@ node {
   input_stream: "MATRIX:transformation_matrix"
   input_stream: "LANDMARKS:roi_landmarks"
   input_stream: "AUXILIARY_LANDMARKS:roi_auxiliary_landmarks"
-  input_stream: "WORLD_LANDMARKS:roi_world_landmarks"
   input_stream: "SEGMENTATION_MASK:roi_segmentation_mask"
   output_stream: "LANDMARKS:landmarks"
   output_stream: "AUXILIARY_LANDMARKS:auxiliary_landmarks"
-  output_stream: "WORLD_LANDMARKS:world_landmarks"
   output_stream: "SEGMENTATION_MASK:segmentation_mask"
 }

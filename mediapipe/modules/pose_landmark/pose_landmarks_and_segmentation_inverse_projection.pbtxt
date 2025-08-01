@@ -45,11 +45,9 @@ input_stream: "MATRIX:transformation_matrix"
 # SEGMENTATION_MASK (Image)
 input_stream: "LANDMARKS:roi_landmarks"
 input_stream: "AUXILIARY_LANDMARKS:roi_auxiliary_landmarks"
-input_stream: "WORLD_LANDMARKS:roi_world_landmarks"
 input_stream: "SEGMENTATION_MASK:roi_segmentation_mask"
 output_stream: "LANDMARKS:landmarks"
 output_stream: "AUXILIARY_LANDMARKS:auxiliary_landmarks"
-output_stream: "WORLD_LANDMARKS:world_landmarks"
 output_stream: "SEGMENTATION_MASK:segmentation_mask"
 
 # -----------------------------------------------------------------------------
@@ -83,18 +81,6 @@ node {
   input_stream: "NORM_LANDMARKS:adjusted_auxiliary_landmarks"
   input_stream: "NORM_RECT:roi"
   output_stream: "NORM_LANDMARKS:auxiliary_landmarks"
-}
-
-# -----------------------------------------------------------------------------
-# WORLD_LANDMARKS
-# -----------------------------------------------------------------------------
-
-# Projects the world landmarks from the letterboxed ROI to the full image.
-node {
-  calculator: "WorldLandmarkProjectionCalculator"
-  input_stream: "LANDMARKS:roi_world_landmarks"
-  input_stream: "NORM_RECT:roi"
-  output_stream: "LANDMARKS:world_landmarks"
 }
 
 # -----------------------------------------------------------------------------

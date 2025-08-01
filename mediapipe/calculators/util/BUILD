@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@rules_cc//cc:cc_library.bzl", "cc_library")
-load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//mediapipe/framework/port:build_config.bzl", "mediapipe_proto_library")
 
 licenses(["notice"])
@@ -1022,6 +1020,23 @@ cc_library(
 )
 
 cc_library(
+    name = "configurable_landmarks_smoothing_calculator",
+    srcs = ["configurable_landmarks_smoothing_calculator.cc"],
+    hdrs = ["configurable_landmarks_smoothing_calculator.h"],
+    deps = [
+        ":landmarks_smoothing_calculator_cc_proto",
+        ":landmarks_smoothing_calculator_utils",
+        "//mediapipe/framework:calculator_framework",
+        "//mediapipe/framework:timestamp",
+        "//mediapipe/framework/api2:node",
+        "//mediapipe/framework/formats:landmark_cc_proto",
+        "//mediapipe/framework/formats:rect_cc_proto",
+        "//mediapipe/framework/port:ret_check",
+    ],
+    alwayslink = 1, # Important for Mediapipe calculators
+)
+
+cc_library(
     name = "landmarks_smoothing_calculator_utils",
     srcs = ["landmarks_smoothing_calculator_utils.cc"],
     hdrs = ["landmarks_smoothing_calculator_utils.h"],
@@ -1118,18 +1133,13 @@ mediapipe_proto_library(
 cc_library(
     name = "visibility_copy_calculator",
     srcs = ["visibility_copy_calculator.cc"],
-    hdrs = ["visibility_copy_calculator.h"],
     deps = [
         ":visibility_copy_calculator_cc_proto",
-        "//mediapipe/framework/api3:calculator",
-        "//mediapipe/framework/api3:calculator_context",
-        "//mediapipe/framework/api3:calculator_contract",
-        "//mediapipe/framework/api3:contract",
-        "//mediapipe/framework/api3:node",
+        "//mediapipe/framework:calculator_framework",
+        "//mediapipe/framework:timestamp",
         "//mediapipe/framework/formats:landmark_cc_proto",
         "//mediapipe/framework/port:ret_check",
-        "@com_google_absl//absl/status",
-        "@com_google_absl//absl/strings:string_view",
+        "@com_google_absl//absl/algorithm:container",
     ],
     alwayslink = 1,
 )

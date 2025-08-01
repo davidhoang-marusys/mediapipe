@@ -103,7 +103,7 @@ public class CameraXPreviewHelper extends CameraHelper {
   private static final String TAG = "CameraXPreviewHelper";
 
   // Target frame and view resolution size in landscape.
-  private static final Size TARGET_SIZE = new Size(1280, 720);
+  private static final Size TARGET_SIZE = new Size(1920, 1080);
   private static final double ASPECT_TOLERANCE = 0.25;
   private static final double ASPECT_PENALTY = 10000;
   // Number of attempts for calculating the offset between the camera's clock and MONOTONIC clock.
@@ -400,6 +400,12 @@ public class CameraXPreviewHelper extends CameraHelper {
   public Size computeDisplaySizeFromViewSize(Size viewSize) {
     // Camera target size is computed already, so just return the capture frame size.
     return frameSize;
+  }
+
+  public void closeCamera(){
+    this.cameraProvider.unbindAll();
+    this.cameraProvider = null;
+    this.preview = null;
   }
 
   @Nullable

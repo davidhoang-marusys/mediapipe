@@ -3,6 +3,11 @@
 # GPU buffer. (GpuBuffer)
 input_stream: "input_video"
 
+# min_cutoff. (double)
+input_side_packet: "MIN_CUTOFF:min_cutoff"
+# beta. (double)
+input_side_packet: "BETA:beta"
+
 # Output image with rendered results. (GpuBuffer)
 output_stream: "output_video"
 # Pose landmarks. (NormalizedLandmarkList)
@@ -14,7 +19,7 @@ node {
   output_side_packet: "PACKET:enable_segmentation"
   node_options: {
     [type.googleapis.com/mediapipe.ConstantSidePacketCalculatorOptions]: {
-      packet { bool_value: true }
+      packet { bool_value: false }
     }
   }
 }
@@ -44,6 +49,8 @@ node {
 node {
   calculator: "PoseLandmarkGpu"
   input_side_packet: "ENABLE_SEGMENTATION:enable_segmentation"
+  input_side_packet: "MIN_CUTOFF:min_cutoff"
+  input_side_packet: "BETA:beta"
   input_stream: "IMAGE:throttled_input_video"
   output_stream: "LANDMARKS:pose_landmarks"
   output_stream: "SEGMENTATION_MASK:segmentation_mask"

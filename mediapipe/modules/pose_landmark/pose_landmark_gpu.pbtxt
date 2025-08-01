@@ -53,6 +53,11 @@ input_side_packet: "MODEL_COMPLEXITY:model_complexity"
 # landmarks on the current image. (bool)
 input_side_packet: "USE_PREV_LANDMARKS:use_prev_landmarks"
 
+# min_cutoff. (double)
+input_side_packet: "MIN_CUTOFF:min_cutoff"
+# beta. (double)
+input_side_packet: "BETA:beta"
+
 # Pose landmarks. (NormalizedLandmarkList)
 # We have 33 landmarks (see pose_landmark_topology.svg), and there are other
 # auxiliary key points.
@@ -102,7 +107,6 @@ output_stream: "LANDMARKS:pose_landmarks"
 # LANDMARKS. However, LANDMARKS provides coordinates (in pixels) of a 3D object
 # projected onto the 2D image surface, while WORLD_LANDMARKS provides
 # coordinates (in meters) of the 3D object itself.
-output_stream: "WORLD_LANDMARKS:pose_world_landmarks"
 
 # Segmentation mask. (GpuBuffer in RGBA, with the same mask values in R and A)
 output_stream: "SEGMENTATION_MASK:segmentation_mask"
@@ -209,7 +213,6 @@ node {
   input_stream: "ROI:pose_rect"
   output_stream: "LANDMARKS:unfiltered_pose_landmarks"
   output_stream: "AUXILIARY_LANDMARKS:unfiltered_auxiliary_landmarks"
-  output_stream: "WORLD_LANDMARKS:unfiltered_world_landmarks"
   output_stream: "SEGMENTATION_MASK:unfiltered_segmentation_mask"
 }
 
@@ -217,13 +220,13 @@ node {
 node {
   calculator: "PoseLandmarkFiltering"
   input_side_packet: "ENABLE:smooth_landmarks"
+  input_side_packet: "MIN_CUTOFF:min_cutoff"
+  input_side_packet: "BETA:beta"
   input_stream: "IMAGE_SIZE:image_size"
   input_stream: "NORM_LANDMARKS:unfiltered_pose_landmarks"
   input_stream: "AUX_NORM_LANDMARKS:unfiltered_auxiliary_landmarks"
-  input_stream: "WORLD_LANDMARKS:unfiltered_world_landmarks"
   output_stream: "FILTERED_NORM_LANDMARKS:pose_landmarks"
   output_stream: "FILTERED_AUX_NORM_LANDMARKS:auxiliary_landmarks"
-  output_stream: "FILTERED_WORLD_LANDMARKS:pose_world_landmarks"
 }
 
 # Calculates region of interest based on the auxiliary landmarks, to be used in

@@ -353,6 +353,7 @@ absl::Status AnnotationOverlayCalculator::Process(CalculatorContext* cc) {
   renderer_->AdoptImage(image_mat.get());
 
   // Render streams onto render target.
+  /*
   for (CollectionItemId id = cc->Inputs().BeginId(); id < cc->Inputs().EndId();
        ++id) {
     auto tag_and_index = cc->Inputs().TagAndIndexFromId(id);
@@ -376,6 +377,8 @@ absl::Status AnnotationOverlayCalculator::Process(CalculatorContext* cc) {
       }
     }
   }
+
+  */
 
   if (use_gpu_) {
 #if !MEDIAPIPE_DISABLE_GPU

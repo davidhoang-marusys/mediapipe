@@ -45,6 +45,7 @@ mediapipe_simple_subgraph(
         ":pose_landmark_model_loader",
         ":pose_landmarks_and_segmentation_inverse_projection",
         ":tensors_to_pose_landmarks_and_segmentation",
+        "//mediapipe/gpu:gpu_buffer_to_image_frame_calculator",
         "//mediapipe/calculators/image:image_properties_calculator",
         "//mediapipe/calculators/tensor:image_to_tensor_calculator",
         "//mediapipe/calculators/tensor:inference_calculator",
@@ -102,6 +103,7 @@ mediapipe_simple_subgraph(
     deps = [
         "//mediapipe/calculators/util:alignment_points_to_rects_calculator",
         "//mediapipe/calculators/util:landmarks_smoothing_calculator",
+        "//mediapipe/calculators/util:configurable_landmarks_smoothing_calculator",
         "//mediapipe/calculators/util:landmarks_to_detection_calculator",
         "//mediapipe/calculators/util:visibility_smoothing_calculator",
         "//mediapipe/framework/tool:switch_container",

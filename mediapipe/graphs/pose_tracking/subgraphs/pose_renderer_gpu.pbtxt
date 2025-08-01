@@ -59,25 +59,25 @@ node {
 }
 
 # Colors the segmentation mask with the color specified in the option.
-node {
-  calculator: "RecolorCalculator"
-  input_stream: "IMAGE_GPU:input_image"
-  input_stream: "MASK_GPU:segmentation_mask"
-  output_stream: "IMAGE_GPU:segmented_image"
-  node_options: {
-    [type.googleapis.com/mediapipe.RecolorCalculatorOptions] {
-      color { r: 0 g: 0 b: 255 }
-      mask_channel: RED
-      invert_mask: true
-      adjust_with_luminance: false
-    }
-  }
-}
+#node {
+#  calculator: "RecolorCalculator"
+#  input_stream: "IMAGE_GPU:input_image"
+#  input_stream: "MASK_GPU:segmentation_mask"
+#  output_stream: "IMAGE_GPU:segmented_image"
+#  node_options: {
+#    [type.googleapis.com/mediapipe.RecolorCalculatorOptions] {
+#      color { r: 0 g: 0 b: 255 }
+#      mask_channel: RED
+#      invert_mask: true
+#      adjust_with_luminance: false
+#    }
+#  }
+#}
 
 # Draws annotations and overlays them on top of the input images.
 node {
   calculator: "AnnotationOverlayCalculator"
-  input_stream: "IMAGE_GPU:segmented_image"
+  input_stream: "IMAGE_GPU:input_image"
   input_stream: "detection_render_data"
   input_stream: "VECTOR:landmarks_render_data"
   input_stream: "roi_render_data"

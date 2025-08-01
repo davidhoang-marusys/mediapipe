@@ -40,8 +40,14 @@ output_stream: "DETECTIONS:detections"
 # (what is expected by the corresponding model), resulting in potential
 # letterboxing in the transformed image.
 node: {
+  calculator: "GpuBufferToImageFrameCalculator"
+  input_stream: "image"
+  output_stream: "input_video_cpu"
+}
+
+node: {
   calculator: "ImageToTensorCalculator"
-  input_stream: "IMAGE_GPU:image"
+  input_stream: "IMAGE:input_video_cpu"
   output_stream: "TENSORS:input_tensors"
   output_stream: "LETTERBOX_PADDING:letterbox_padding"
   options: {
@@ -54,7 +60,6 @@ node: {
         max: 1.0
       }
       border_mode: BORDER_ZERO
-      gpu_origin: TOP_LEFT
     }
   }
 }
@@ -70,7 +75,7 @@ node {
     [mediapipe.InferenceCalculatorOptions.ext] {
       model_path: "mediapipe/modules/pose_detection/pose_detection.tflite"
       #
-      delegate: { gpu { use_advanced_gpu_api: true } }
+      delegate { xnnpack {} }
     }
   }
 }
